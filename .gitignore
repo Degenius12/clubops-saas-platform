@@ -1,0 +1,65 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+.next/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output
+
+# Compiled binary files
+*.exe
+*.dll
+*.pak
+
+# ClubOps specific excludes
+chrome_*.pak
+d3dcompiler_47.dll
+ffmpeg.dll
+icudtl.dat
+lib*.dll
+resources.pak
+snapshot_blob.bin
+squirrel.exe
+Squirrel-UpdateSelf.log
+v8_context_snapshot.bin
+vk_swiftshader.*
+vulkan-1.dll
+claude.exe
+.claude-code-mcp.log
+locales/
+resources/
