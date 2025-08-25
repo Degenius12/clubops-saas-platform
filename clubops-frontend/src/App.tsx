@@ -3,23 +3,23 @@ import { Routes, Route } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
 // Layout Components
-import Sidebar from '@components/layout/Sidebar'
-import Header from '@components/layout/Header'
+import Sidebar from './components/layout/Sidebar'
+import Header from './components/layout/Header'
 
 // Pages
-import Dashboard from '@pages/Dashboard'
-import DancerManagement from '@pages/DancerManagement'
-import DJInterface from '@pages/DJInterface'
-import VIPRooms from '@pages/VIPRooms'
-import Financial from '@pages/Financial'
-import Settings from '@pages/Settings'
-import Login from '@pages/auth/Login'
+import Dashboard from './pages/Dashboard'
+import DancerManagement from './pages/DancerManagement'
+import DJInterface from './pages/DJInterface'
+import VIPRooms from './pages/VIPRooms'
+import Financial from './pages/Financial'
+import Settings from './pages/Settings'
+import Login from './pages/auth/Login'
 
 // Hooks
-import { useAuth } from '@hooks/useAuth'
+import { useAuth } from './hooks/useAuth'
 
 // Store
-import { useStore } from '@utils/store'
+import { useStore } from './utils/store'
 
 function App() {
   const { user, isLoading } = useAuth()
@@ -27,11 +27,11 @@ function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-dark-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full"
+          className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"
         />
       </div>
     )
@@ -42,7 +42,7 @@ function App() {
   }
 
   return (
-    <div className={`min-h-screen bg-dark-50 ${theme === 'dark' ? 'dark' : ''}`}>
+    <div className={`min-h-screen bg-gray-900 ${theme === 'dark' ? 'dark' : ''}`}>
       <div className="flex">
         {/* Sidebar Navigation */}
         <Sidebar />

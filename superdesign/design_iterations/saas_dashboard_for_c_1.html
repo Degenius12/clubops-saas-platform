@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubOps - Club Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'deep-blue': '#1e3a8a',
+                        'metallic-blue': '#2563eb',
+                        'gold': '#f59e0b',
+                        'dark-bg': '#0f1419',
+                        'card-bg': '#1f2937'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f1419 0%, #1f2937 100%);
+        }
+        .gold-gradient {
+            background: linear-gradient(45deg, #f59e0b, #fbbf24);
+        }
+        .draggable:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s ease;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-gray-900 border-b border-gray-700 px-8 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="w-10 h-10 bg-gradient-to-r from-metallic-blue to-gold rounded-lg flex items-center justify-center">
+                    <span class="text-white font-bold text-lg">CO</span>
+                </div>
+                <h1 class="text-2xl font-bold">ClubOps</h1>
+                <span class="text-gold text-sm px-3 py-1 bg-gold/20 rounded-full">Pro Plan</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="text-sm text-gray-300">
+                    <span>Online: </span><span class="text-green-400">24 Dancers</span>
+                </div>
+                <div class="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center">
+                    <span class="text-sm">MG</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-card-bg border-r border-gray-700 p-6">
+            <nav class="space-y-4">
+                <a href="#" class="flex items-center space-x-3 text-white bg-metallic-blue px-4 py-3 rounded-lg">
+                    <div class="w-5 h-5 bg-white rounded"></div>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <div class="w-5 h-5 bg-gray-400 rounded"></div>
+                    <span>Dancer Check-in</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <div class="w-5 h-5 bg-gray-400 rounded"></div>
+                    <span>DJ Queue</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <div class="w-5 h-5 bg-gray-400 rounded"></div>
+                    <span>VIP Rooms</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <div class="w-5 h-5 bg-gray-400 rounded"></div>
+                    <span>Financial</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 text-gray-300 hover:text-white px-4 py-3 rounded-lg hover:bg-gray-700">
+                    <div class="w-5 h-5 bg-gray-400 rounded"></div>
+                    <span>Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <!-- Alert Banner -->
+            <div class="bg-red-900 border border-red-700 rounded-lg p-4 mb-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center">!</div>
+                        <div>
+                            <h3 class="font-semibold text-red-100">License Alert</h3>
+                            <p class="text-red-200 text-sm">3 dancers have licenses expiring within 2 weeks</p>
+                        </div>
+                    </div>
+                    <button class="text-red-200 hover:text-white">View Details</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Active Dancers</p>
+                            <p class="text-2xl font-bold text-white">24</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                            <div class="w-6 h-6 bg-green-500 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">VIP Rooms Occupied</p>
+                            <p class="text-2xl font-bold text-white">8/12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-gold/20 rounded-lg flex items-center justify-center">
+                            <div class="w-6 h-6 bg-gold rounded"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Today's Revenue</p>
+                            <p class="text-2xl font-bold text-white">$12,450</p>
+                        </div>
+                        <div class="w-12 h-12 bg-metallic-blue/20 rounded-lg flex items-center justify-center">
+                            <div class="w-6 h-6 bg-metallic-blue rounded"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Queue Length</p>
+                            <p class="text-2xl font-bold text-white">15</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                            <div class="w-6 h-6 bg-purple-500 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- DJ Queue Management -->
+                <div class="lg:col-span-2 bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xl font-semibold text-white">DJ Queue - Main Stage</h2>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-green-400 text-sm">Live</span>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="bg-gold p-4 rounded-lg draggable cursor-move">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+                                        <span class="text-gold font-semibold">1</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-black">Currently Performing</p>
+                                        <p class="text-black/80 text-sm">Dancer: Sophia | Song: Dreams - Fleetwood Mac</p>
+                                    </div>
+                                </div>
+                                <span class="text-black font-bold">03:45</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg draggable cursor-move hover:bg-gray-600">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-metallic-blue rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm">2</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-white">Next Up</p>
+                                        <p class="text-gray-300 text-sm">Dancer: Isabella | Song: Material Girl - Madonna</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-700 p-4 rounded-lg draggable cursor-move hover:bg-gray-600">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
+                                        <span class="text-white text-sm">3</span>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold text-white">Queue</p>
+                                        <p class="text-gray-300 text-sm">Dancer: Maya | Song: Bad Guy - Billie Eilish</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full mt-4 bg-metallic-blue hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Add to Queue
+                    </button>
+                </div>
+
+                <!-- VIP Room Status -->
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">VIP Room Status</h2>
+                    <div class="space-y-4">
+                        <div class="bg-green-900 border border-green-700 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-green-100 font-semibold">Room 1</span>
+                                <span class="text-green-400 text-sm">Occupied</span>
+                            </div>
+                            <p class="text-green-200 text-sm">Dancer: Sophia</p>
+                            <p class="text-green-200 text-sm">Time: 23:45</p>
+                        </div>
+                        <div class="bg-green-900 border border-green-700 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-green-100 font-semibold">Room 2</span>
+                                <span class="text-green-400 text-sm">Occupied</span>
+                            </div>
+                            <p class="text-green-200 text-sm">Dancer: Isabella</p>
+                            <p class="text-green-200 text-sm">Time: 15:30</p>
+                        </div>
+                        <div class="bg-gray-700 border border-gray-600 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-100 font-semibold">Room 3</span>
+                                <span class="text-gray-400 text-sm">Available</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">Ready for booking</p>
+                        </div>
+                        <div class="bg-gray-700 border border-gray-600 rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-gray-100 font-semibold">Room 4</span>
+                                <span class="text-gray-400 text-sm">Available</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">Ready for booking</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- License Compliance & Financial Widgets -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                <!-- License Compliance -->
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">License Compliance</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-red-900 border border-red-700 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                <span class="text-red-100">Sophia Martinez</span>
+                            </div>
+                            <span class="text-red-200 text-sm">Expires in 5 days</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-yellow-900 border border-yellow-700 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                <span class="text-yellow-100">Isabella Chen</span>
+                            </div>
+                            <span class="text-yellow-200 text-sm">Expires in 12 days</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-green-900 border border-green-700 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span class="text-green-100">Maya Johnson</span>
+                            </div>
+                            <span class="text-green-200 text-sm">Valid for 45 days</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Tracking -->
+                <div class="bg-card-bg border border-gray-700 rounded-lg p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">Today's Revenue</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">Bar Fees</span>
+                            <span class="text-white font-semibold">$4,200</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-300">VIP Room Revenue</span>
+                            <span class="text-white font-semibold">$8,250</span>
+                        </div>
+                        <div class="border-t border-gray-600 pt-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gold font-semibold">Total Revenue</span>
+                                <span class="text-gold font-bold text-xl">$12,450</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-metallic-blue/20 rounded-lg">
+                            <p class="text-metallic-blue text-sm">↑ 15% increase from yesterday</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
