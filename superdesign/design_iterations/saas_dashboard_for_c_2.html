@@ -3,338 +3,327 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClubOps - DJ Control Center</title>
+    <title>ClubOps - Financial Focus Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'deep-blue': '#1e3a8a',
-                        'metallic-blue': '#3b82f6',
-                        'gold': '#f59e0b',
-                        'dark-bg': '#111827',
-                        'card-bg': '#1f2937',
-                        'accent-red': '#dc2626'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        .gradient-bg {
-            background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #111827 100%);
+        body { background: radial-gradient(ellipse at center, #1A1A3A 0%, #0F0F23 70%); }
+        .metallic-blue { background: linear-gradient(45deg, #1E3A8A, #3B82F6, #1E40AF); }
+        .metallic-gold { background: linear-gradient(45deg, #B45309, #F59E0B, #D97706); }
+        .metallic-red { background: linear-gradient(45deg, #991B1B, #DC2626, #B91C1C); }
+        .glass-dark { 
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .music-wave {
-            background: linear-gradient(90deg, #3b82f6 20%, #f59e0b 50%, #3b82f6 80%);
-            animation: wave 2s ease-in-out infinite;
-        }
-        @keyframes wave {
-            0%, 100% { transform: scaleY(1); }
-            50% { transform: scaleY(1.5); }
-        }
-        .queue-item {
-            transition: all 0.3s ease;
-        }
-        .queue-item:hover {
-            transform: translateX(8px);
-            background: linear-gradient(45deg, #1f2937, #374151);
-        }
+        .glow-effect { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+        .drag-handle { cursor: grab; transition: all 0.2s ease; }
+        .drag-handle:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     </style>
 </head>
-<body class="gradient-bg text-white min-h-screen">
-    <!-- Top Navigation -->
-    <nav class="bg-gray-900/80 backdrop-blur-sm border-b border-gold/30 px-8 py-4">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-6">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-metallic-blue to-gold rounded-xl flex items-center justify-center">
-                        <span class="text-white font-bold text-xl">♪</span>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold">ClubOps DJ Center</h1>
-                        <p class="text-gold text-sm">Premium Club Management</p>
-                    </div>
-                </div>
-                <!-- Live Status Indicator -->
-                <div class="flex items-center space-x-2 px-4 py-2 bg-green-900 rounded-full">
-                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span class="text-green-100 text-sm font-medium">LIVE</span>
-                </div>
-            </div>
-            <div class="flex items-center space-x-6">
-                <div class="text-right">
-                    <div class="text-sm text-gray-300">Current Time</div>
-                    <div class="text-lg font-mono text-white">11:47 PM</div>
-                </div>
-                <div class="w-10 h-10 bg-gold/20 rounded-full flex items-center justify-center border border-gold/50">
-                    <span class="text-gold font-semibold">DJ</span>
-                </div>
+<body class="min-h-screen text-white font-sans">
+    <!-- Side Navigation -->
+    <div class="fixed left-0 top-0 h-full w-64 glass-dark border-r border-gray-700/30 z-40">
+        <div class="p-6">
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-red-400 to-blue-400 bg-clip-text text-transparent mb-8">ClubOps</h1>
+            <nav class="space-y-3">
+                <div class="metallic-gold text-black px-4 py-3 rounded-lg font-semibold">💰 Revenue Center</div>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all">
+                    <span>👥</span> <span>Dancer Management</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all">
+                    <span>🎵</span> <span>DJ Control</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all">
+                    <span>🏠</span> <span>VIP Management</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all">
+                    <span>📊</span> <span>Analytics</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-all">
+                    <span>⚙️</span> <span>Settings</span>
+                </a>
+            </nav>
+        </div>
+        <div class="absolute bottom-6 left-6 right-6">
+            <div class="glass-dark p-4 rounded-lg">
+                <div class="text-sm text-gray-300 mb-2">Subscription Status</div>
+                <div class="metallic-blue text-center py-2 rounded font-semibold text-sm">ENTERPRISE</div>
+                <div class="text-xs text-gray-400 mt-2 text-center">Unlimited Features</div>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <div class="flex h-screen">
-        <!-- Left Panel - Current Performance -->
-        <div class="w-96 bg-card-bg border-r border-gray-700 p-6">
-            <!-- Now Playing -->
-            <div class="bg-gradient-to-br from-gold/20 to-metallic-blue/20 border border-gold/30 rounded-xl p-6 mb-6">
-                <div class="flex items-center space-x-2 mb-4">
-                    <div class="w-4 h-4 bg-gold rounded-full"></div>
-                    <span class="text-gold font-semibold">NOW PLAYING</span>
-                </div>
-                <div class="space-y-3">
-                    <div class="w-20 h-20 bg-gradient-to-br from-metallic-blue to-gold rounded-lg flex items-center justify-center mb-4">
-                        <span class="text-white text-2xl">♪</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-white">Dreams</h3>
-                        <p class="text-gray-300">Fleetwood Mac</p>
-                    </div>
-                    <div>
-                        <p class="text-gold font-semibold">Dancer: Sophia Martinez</p>
-                        <p class="text-gray-400 text-sm">Main Stage • Started 2:15 ago</p>
-                    </div>
-                </div>
-                <!-- Progress Bar -->
-                <div class="mt-6">
-                    <div class="flex justify-between text-sm text-gray-400 mb-2">
-                        <span>2:15</span>
-                        <span>4:32</span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-gold to-metallic-blue h-2 rounded-full" style="width: 48%"></div>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <div class="ml-64 p-8">
+        <!-- Header with Compliance Alert -->
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-4xl font-bold mb-2">Revenue Dashboard</h2>
+                <p class="text-gray-300">Real-time financial & operational metrics</p>
             </div>
-
-            <!-- Music Controls -->
-            <div class="bg-gray-800 rounded-xl p-6 mb-6">
-                <h3 class="text-lg font-semibold mb-4">Playback Controls</h3>
-                <div class="flex justify-center items-center space-x-4 mb-4">
-                    <button class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600">
-                        <div class="w-4 h-4 bg-white"></div>
-                    </button>
-                    <button class="w-16 h-16 bg-gold rounded-full flex items-center justify-center hover:bg-gold/80">
-                        <div class="w-6 h-6 bg-white rounded-full"></div>
-                    </button>
-                    <button class="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center hover:bg-gray-600">
-                        <div class="w-4 h-4 bg-white"></div>
-                    </button>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex justify-between">
-                        <span class="text-sm text-gray-400">Volume</span>
-                        <span class="text-sm text-white">85%</span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2">
-                        <div class="bg-metallic-blue h-2 rounded-full" style="width: 85%"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Audio Visualizer -->
-            <div class="bg-gray-800 rounded-xl p-6">
-                <h3 class="text-lg font-semibold mb-4">Audio Levels</h3>
-                <div class="flex items-end justify-between h-24 space-x-1">
-                    <div class="w-3 bg-green-400 rounded-t" style="height: 60%"></div>
-                    <div class="w-3 bg-green-400 rounded-t" style="height: 80%"></div>
-                    <div class="w-3 bg-gold rounded-t" style="height: 90%"></div>
-                    <div class="w-3 bg-gold rounded-t" style="height: 75%"></div>
-                    <div class="w-3 bg-gold rounded-t" style="height: 95%"></div>
-                    <div class="w-3 bg-gold rounded-t" style="height: 70%"></div>
-                    <div class="w-3 bg-green-400 rounded-t" style="height: 85%"></div>
-                    <div class="w-3 bg-green-400 rounded-t" style="height: 65%"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Center Panel - DJ Queue -->
-        <div class="flex-1 p-8">
-            <!-- Queue Header -->
-            <div class="flex items-center justify-between mb-8">
+            <div class="metallic-red px-6 py-3 rounded-lg flex items-center space-x-3 glow-effect">
+                <div class="w-3 h-3 bg-white rounded-full animate-ping"></div>
                 <div>
-                    <h2 class="text-3xl font-bold text-white">Performance Queue</h2>
-                    <p class="text-gray-400">Drag to reorder • 15 dancers in queue</p>
+                    <div class="font-semibold">URGENT: License Review</div>
+                    <div class="text-sm opacity-90">2 dancers need immediate attention</div>
                 </div>
-                <div class="flex space-x-4">
-                    <button class="bg-metallic-blue hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
-                        Add Dancer
-                    </button>
-                    <button class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-colors">
-                        Shuffle Queue
-                    </button>
+            </div>
+        </div>
+
+        <!-- Revenue Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="glass-dark rounded-2xl p-6 glow-effect">
+                <div class="text-center">
+                    <div class="w-16 h-16 metallic-gold rounded-full mx-auto mb-4 flex items-center justify-center text-2xl text-black font-bold">$</div>
+                    <div class="text-3xl font-bold text-yellow-400">$4,250</div>
+                    <div class="text-sm text-gray-300 mt-1">Tonight's Revenue</div>
+                    <div class="text-xs text-green-400 mt-2">↑ 23% from yesterday</div>
+                </div>
+            </div>
+            <div class="glass-dark rounded-2xl p-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 metallic-blue rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">15</div>
+                    <div class="text-3xl font-bold">$283</div>
+                    <div class="text-sm text-gray-300 mt-1">Avg per Dancer</div>
+                    <div class="text-xs text-blue-400 mt-2">Above target</div>
+                </div>
+            </div>
+            <div class="glass-dark rounded-2xl p-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 metallic-red rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">9</div>
+                    <div class="text-3xl font-bold">$472</div>
+                    <div class="text-sm text-gray-300 mt-1">Avg VIP Session</div>
+                    <div class="text-xs text-red-400 mt-2">Premium tier</div>
+                </div>
+            </div>
+            <div class="glass-dark rounded-2xl p-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center text-2xl font-bold">92%</div>
+                    <div class="text-3xl font-bold text-purple-400">Capacity</div>
+                    <div class="text-sm text-gray-300 mt-1">Current Utilization</div>
+                    <div class="text-xs text-green-400 mt-2">Peak hours</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            
+            <!-- Real-time DJ Queue with Drag & Drop -->
+            <div class="xl:col-span-1 glass-dark rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-semibold">Live DJ Queue</h3>
+                    <div class="bg-red-600 w-3 h-3 rounded-full animate-pulse"></div>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Currently Playing -->
+                    <div class="metallic-blue p-4 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="font-bold text-lg">NOW PLAYING</div>
+                                <div class="text-sm opacity-90">"Dangerous Woman" - Ariana Grande</div>
+                                <div class="text-xs opacity-75">Dancer: Aurora | Main Stage</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-mono">1:45</div>
+                                <div class="text-xs">remaining</div>
+                            </div>
+                        </div>
+                        <div class="mt-3 bg-white/20 h-2 rounded-full overflow-hidden">
+                            <div class="h-full bg-white w-3/4 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Queue Items -->
+                    <div class="space-y-2">
+                        <div class="drag-handle glass-dark border border-yellow-500/30 p-3 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-yellow-500 rounded text-black text-center font-bold text-sm leading-8">1</div>
+                                    <div>
+                                        <div class="font-medium">Senorita</div>
+                                        <div class="text-xs text-gray-400">Luna | Side Stage</div>
+                                    </div>
+                                </div>
+                                <div class="text-xl cursor-grab">⋮⋮</div>
+                            </div>
+                        </div>
+                        <div class="drag-handle glass-dark border border-blue-500/30 p-3 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-blue-500 rounded text-center font-bold text-sm leading-8">2</div>
+                                    <div>
+                                        <div class="font-medium">Bad Guy</div>
+                                        <div class="text-xs text-gray-400">Vera | Main Stage</div>
+                                    </div>
+                                </div>
+                                <div class="text-xl cursor-grab">⋮⋮</div>
+                            </div>
+                        </div>
+                        <div class="drag-handle glass-dark border border-purple-500/30 p-3 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-purple-500 rounded text-center font-bold text-sm leading-8">3</div>
+                                    <div>
+                                        <div class="font-medium">Levitating</div>
+                                        <div class="text-xs text-gray-400">Mia | Private</div>
+                                    </div>
+                                </div>
+                                <div class="text-xl cursor-grab">⋮⋮</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full metallic-gold text-black py-3 rounded-lg font-semibold mt-4">+ Add to Queue</button>
                 </div>
             </div>
 
-            <!-- Queue List -->
-            <div class="space-y-4">
-                <!-- Current Performer -->
-                <div class="bg-gradient-to-r from-gold/30 to-transparent border border-gold/50 rounded-xl p-6">
-                    <div class="flex items-center justify-between">
+            <!-- VIP Room Grid -->
+            <div class="xl:col-span-1 glass-dark rounded-2xl p-6">
+                <h3 class="text-2xl font-semibold mb-6">VIP Room Monitor</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-green-600/30 border-2 border-green-500 p-4 rounded-xl">
+                        <div class="text-green-400 font-bold text-lg">VIP 01</div>
+                        <div class="text-sm text-white">OCCUPIED</div>
+                        <div class="text-xs text-green-300 mt-2">Aurora & Client</div>
+                        <div class="text-xs text-gray-300">Duration: 47 min</div>
+                        <div class="text-lg font-bold text-green-400 mt-2">$560</div>
+                    </div>
+                    <div class="bg-gray-600/30 border-2 border-gray-500 p-4 rounded-xl">
+                        <div class="text-gray-400 font-bold text-lg">VIP 02</div>
+                        <div class="text-sm text-white">AVAILABLE</div>
+                        <div class="text-xs text-gray-300 mt-2">Ready</div>
+                        <div class="text-xs text-gray-400">Last clean: 15m</div>
+                        <div class="text-lg font-bold text-gray-500 mt-2">$0</div>
+                    </div>
+                    <div class="bg-red-600/30 border-2 border-red-500 p-4 rounded-xl">
+                        <div class="text-red-400 font-bold text-lg">VIP 03</div>
+                        <div class="text-sm text-white">OCCUPIED</div>
+                        <div class="text-xs text-red-300 mt-2">Luna & Client</div>
+                        <div class="text-xs text-gray-300">Duration: 23 min</div>
+                        <div class="text-lg font-bold text-red-400 mt-2">$280</div>
+                    </div>
+                    <div class="bg-yellow-600/30 border-2 border-yellow-500 p-4 rounded-xl">
+                        <div class="text-yellow-400 font-bold text-lg">VIP 04</div>
+                        <div class="text-sm text-white">CLEANING</div>
+                        <div class="text-xs text-yellow-300 mt-2">Staff: Maria</div>
+                        <div class="text-xs text-gray-300">Est: 8 min</div>
+                        <div class="text-lg font-bold text-gray-500 mt-2">$0</div>
+                    </div>
+                </div>
+                <div class="mt-6 bg-white/5 p-4 rounded-xl">
+                    <h4 class="font-semibold mb-3">VIP Performance</h4>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="text-gray-400">Sessions Today</div>
+                            <div class="text-2xl font-bold text-blue-400">23</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">Total Revenue</div>
+                            <div class="text-2xl font-bold text-green-400">$2,840</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dancer Check-in with Compliance -->
+            <div class="xl:col-span-1 glass-dark rounded-2xl p-6">
+                <h3 class="text-2xl font-semibold mb-6">Dancer Status & Compliance</h3>
+                
+                <!-- Alert Section -->
+                <div class="metallic-red p-4 rounded-xl mb-6">
+                    <h4 class="font-bold text-lg mb-3">⚠️ COMPLIANCE ALERTS</h4>
+                    <div class="space-y-2">
+                        <div class="bg-white/20 p-3 rounded">
+                            <div class="font-medium">Luna Martinez</div>
+                            <div class="text-sm opacity-90">License expires Aug 30 (4 days)</div>
+                            <button class="mt-2 bg-white text-red-600 px-3 py-1 rounded text-sm font-semibold">URGENT</button>
+                        </div>
+                        <div class="bg-white/20 p-3 rounded">
+                            <div class="font-medium">Aria Johnson</div>
+                            <div class="text-sm opacity-90">Missing background check renewal</div>
+                            <button class="mt-2 bg-white text-red-600 px-3 py-1 rounded text-sm font-semibold">ACTION</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Dancers -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between p-4 glass-dark rounded-lg border border-green-500/30">
                         <div class="flex items-center space-x-4">
-                            <div class="w-16 h-16 bg-gold rounded-full flex items-center justify-center">
-                                <span class="text-black font-bold text-xl">1</span>
-                            </div>
+                            <div class="w-12 h-12 metallic-blue rounded-full flex items-center justify-center font-bold">AU</div>
                             <div>
-                                <h3 class="text-xl font-bold text-white">Sophia Martinez</h3>
-                                <p class="text-gold">Currently Performing • Main Stage</p>
-                                <p class="text-gray-300 text-sm">Song: Dreams - Fleetwood Mac (2:15 / 4:32)</p>
+                                <div class="font-semibold">Aurora</div>
+                                <div class="text-sm text-green-400">✓ All compliant</div>
+                                <div class="text-xs text-gray-400">Stage time: 2h 15m</div>
                             </div>
                         </div>
                         <div class="text-right">
-                            <div class="text-gold font-semibold">ON STAGE</div>
-                            <div class="text-sm text-gray-300">Started: 11:45 PM</div>
+                            <div class="text-lg font-bold text-green-400">$380</div>
+                            <div class="text-xs text-gray-400">tonight</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Next Up -->
-                <div class="bg-card-bg border border-metallic-blue/50 rounded-xl p-6 queue-item cursor-move">
-                    <div class="flex items-center justify-between">
+                    
+                    <div class="flex items-center justify-between p-4 glass-dark rounded-lg border border-yellow-500/30">
                         <div class="flex items-center space-x-4">
-                            <div class="w-14 h-14 bg-metallic-blue rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold">2</span>
-                            </div>
+                            <div class="w-12 h-12 metallic-gold rounded-full flex items-center justify-center font-bold text-black">LU</div>
                             <div>
-                                <h3 class="text-lg font-bold text-white">Isabella Chen</h3>
-                                <p class="text-metallic-blue">Next Up • Main Stage</p>
-                                <p class="text-gray-300 text-sm">Song: Material Girl - Madonna (4:12)</p>
+                                <div class="font-semibold">Luna</div>
+                                <div class="text-sm text-yellow-400">⚠️ License expiring</div>
+                                <div class="text-xs text-gray-400">Stage time: 1h 45m</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <div class="text-metallic-blue font-semibold">READY</div>
-                                <div class="text-sm text-gray-300">ETA: 2:17</div>
-                            </div>
-                            <div class="w-6 h-6 bg-gray-600 rounded"></div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-yellow-400">$295</div>
+                            <div class="text-xs text-gray-400">tonight</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Queue Items -->
-                <div class="bg-gray-800 border border-gray-600 rounded-xl p-6 queue-item cursor-move">
-                    <div class="flex items-center justify-between">
+                    
+                    <div class="flex items-center justify-between p-4 glass-dark rounded-lg border border-blue-500/30">
                         <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold">3</span>
-                            </div>
+                            <div class="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center font-bold">VE</div>
                             <div>
-                                <h3 class="text-lg font-bold text-white">Maya Johnson</h3>
-                                <p class="text-gray-400">In Queue • Main Stage</p>
-                                <p class="text-gray-300 text-sm">Song: Bad Guy - Billie Eilish (3:45)</p>
+                                <div class="font-semibold">Vera</div>
+                                <div class="text-sm text-green-400">✓ All compliant</div>
+                                <div class="text-xs text-gray-400">Stage time: 1h 30m</div>
                             </div>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <div class="text-gray-400">WAITING</div>
-                                <div class="text-sm text-gray-500">ETA: 6:29</div>
-                            </div>
-                            <div class="w-6 h-6 bg-gray-600 rounded"></div>
+                        <div class="text-right">
+                            <div class="text-lg font-bold text-blue-400">$220</div>
+                            <div class="text-xs text-gray-400">tonight</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="bg-gray-800 border border-gray-600 rounded-xl p-6 queue-item cursor-move">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-4">
-                            <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center">
-                                <span class="text-white font-bold">4</span>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-bold text-white">Emma Rodriguez</h3>
-                                <p class="text-gray-400">In Queue • Main Stage</p>
-                                <p class="text-gray-300 text-sm">Song: Levitating - Dua Lipa (3:23)</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="text-right">
-                                <div class="text-gray-400">WAITING</div>
-                                <div class="text-sm text-gray-500">ETA: 10:14</div>
-                            </div>
-                            <div class="w-6 h-6 bg-gray-600 rounded"></div>
-                        </div>
-                    </div>
-                </div>
+                
+                <button class="w-full metallic-blue py-3 rounded-lg font-semibold mt-6">Dancer Check-In System</button>
             </div>
         </div>
-
-        <!-- Right Panel - Status & Controls -->
-        <div class="w-80 bg-card-bg border-l border-gray-700 p-6">
-            <!-- License Alerts -->
-            <div class="bg-red-900 border border-red-600 rounded-xl p-4 mb-6">
-                <div class="flex items-center space-x-2 mb-3">
-                    <div class="w-4 h-4 bg-red-500 rounded-full animate-pulse"></div>
-                    <span class="text-red-100 font-semibold">License Alert</span>
-                </div>
-                <div class="space-y-2">
-                    <div class="text-red-200 text-sm">• Sophia Martinez (5 days)</div>
-                    <div class="text-red-200 text-sm">• Isabella Chen (12 days)</div>
-                </div>
-                <button class="w-full mt-3 bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg text-sm transition-colors">
-                    View All Alerts
-                </button>
-            </div>
-
-            <!-- VIP Rooms -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-4">VIP Room Status</h3>
-                <div class="space-y-3">
-                    <div class="bg-green-900 border border-green-600 rounded-lg p-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-green-100 font-semibold">Room 1</span>
-                            <span class="text-green-400 text-sm">Occupied</span>
-                        </div>
-                        <p class="text-green-200 text-sm">Sophia • 23:45</p>
+        
+        <!-- Bottom Analytics Bar -->
+        <div class="mt-8 glass-dark rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <div class="flex space-x-8">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-yellow-400">$4,250</div>
+                        <div class="text-sm text-gray-400">Total Revenue</div>
                     </div>
-                    <div class="bg-green-900 border border-green-600 rounded-lg p-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-green-100 font-semibold">Room 2</span>
-                            <span class="text-green-400 text-sm">Occupied</span>
-                        </div>
-                        <p class="text-green-200 text-sm">Maya • 15:30</p>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-blue-400">15</div>
+                        <div class="text-sm text-gray-400">Active Dancers</div>
                     </div>
-                    <div class="bg-gray-700 border border-gray-600 rounded-lg p-3">
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-100 font-semibold">Room 3</span>
-                            <span class="text-gray-400 text-sm">Available</span>
-                        </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-400">68</div>
+                        <div class="text-sm text-gray-400">Patron Count</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-400">9/12</div>
+                        <div class="text-sm text-gray-400">VIP Utilization</div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Quick Stats -->
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-4">Tonight's Stats</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Active Dancers</span>
-                        <span class="text-white font-semibold">24</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Songs Played</span>
-                        <span class="text-white font-semibold">187</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-300">Revenue</span>
-                        <span class="text-gold font-semibold">$12,450</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quick Actions -->
-            <div>
-                <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
-                <div class="space-y-3">
-                    <button class="w-full bg-metallic-blue hover:bg-blue-600 text-white px-4 py-3 rounded-lg transition-colors">
-                        Emergency Stop
-                    </button>
-                    <button class="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-colors">
-                        Skip Current Song
-                    </button>
-                    <button class="w-full bg-gray-700 hover:bg-gray-600 text-white px-4 py-3 rounded-lg transition-colors">
-                        Extend Time
-                    </button>
+                <div class="flex space-x-4">
+                    <button class="px-6 py-3 border border-gray-600 rounded-lg hover:bg-white/5 transition-colors">Export Report</button>
+                    <button class="metallic-gold text-black px-6 py-3 rounded-lg font-semibold">Upgrade Plan</button>
                 </div>
             </div>
         </div>

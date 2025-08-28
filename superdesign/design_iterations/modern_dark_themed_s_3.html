@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubOps - Modular Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#1a1a1a',
+                        'dark-surface': '#242424',
+                        'metallic-blue': '#2563eb',
+                        'accent-gold': '#d97706',
+                        'deep-red': '#dc2626'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(36, 36, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .floating-card {
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .floating-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        .neon-border {
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+            border: 1px solid rgba(37, 99, 235, 0.5);
+        }
+        .gold-glow {
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
+            border: 1px solid rgba(217, 119, 6, 0.5);
+        }
+        .red-glow {
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+            border: 1px solid rgba(220, 38, 38, 0.5);
+        }
+        .status-indicator {
+            animation: status-pulse 2s infinite;
+        }
+        @keyframes status-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .drag-handle {
+            cursor: grab;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.1) 2px,
+                rgba(255, 255, 255, 0.1) 4px
+            );
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-sans min-h-screen p-6">
+    <!-- Header Bar -->
+    <header class="glass-card rounded-2xl p-6 mb-8 floating-card">
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center space-y-4 lg:space-y-0">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-gradient-to-br from-metallic-blue via-accent-gold to-deep-red rounded-2xl flex items-center justify-center">
+                    <span class="text-lg font-bold text-white">CO</span>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold bg-gradient-to-r from-metallic-blue via-accent-gold to-deep-red bg-clip-text text-transparent">
+                        ClubOps
+                    </div>
+                    <div class="text-sm text-gray-400">Modular Management Dashboard</div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4">
+                <!-- Status Indicators -->
+                <div class="flex items-center space-x-2 px-4 py-2 bg-green-900/30 rounded-xl border border-green-600/30">
+                    <div class="w-3 h-3 bg-green-400 rounded-full status-indicator"></div>
+                    <span class="text-green-400 text-sm font-medium">System Online</span>
+                </div>
+                
+                <div class="flex items-center space-x-2 px-4 py-2 bg-deep-red/20 rounded-xl border border-deep-red/30">
+                    <div class="w-3 h-3 bg-deep-red rounded-full status-indicator"></div>
+                    <span class="text-deep-red text-sm font-medium">3 Alerts</span>
+                </div>
+                
+                <div class="text-right">
+                    <div class="text-lg font-bold text-white">11:42 PM</div>
+                    <div class="text-xs text-gray-400">Tuesday, August 26</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Modular Card Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        
+        <!-- Live Performance Card -->
+        <div class="md:col-span-2 glass-card rounded-2xl p-6 floating-card gold-glow">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Live Performance</h3>
+                    <div class="text-sm text-gray-400">Main Stage</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-accent-gold/10 via-deep-red/10 to-metallic-blue/10 rounded-xl p-4 mb-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-accent-gold to-deep-red rounded-2xl flex items-center justify-center">
+                        <span class="text-lg font-bold text-white">JR</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="text-lg font-bold text-white">Jessica Rivera</div>
+                        <div class="text-accent-gold text-sm">"Dangerous Woman" - Ariana Grande</div>
+                        <div class="flex items-center space-x-2 mt-2">
+                            <div class="w-32 bg-gray-700 rounded-full h-2">
+                                <div class="bg-accent-gold h-2 rounded-full transition-all duration-1000" style="width: 65%"></div>
+                            </div>
+                            <span class="text-sm text-white font-mono">2:34</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button class="flex-1 bg-metallic-blue/20 border border-metallic-blue/30 text-metallic-blue py-2 rounded-lg text-sm font-medium hover:bg-metallic-blue/30 transition-colors">
+                    Next Song
+                </button>
+                <button class="flex-1 bg-deep-red/20 border border-deep-red/30 text-deep-red py-2 rounded-lg text-sm font-medium hover:bg-deep-red/30 transition-colors">
+                    End Set
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Dancers Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card neon-border">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Active Dancers</h3>
+                    <div class="text-2xl font-bold text-metallic-blue">12</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-gray-800/50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        <span class="text-sm text-white">On Stage: 1</span>
+                    </div>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-accent-gold rounded-full"></div>
+                        <span class="text-sm text-white">In Queue: 3</span>
+                    </div>
+                </div>
+                <div class="bg-gray-800/50 rounded-lg p-3">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-metallic-blue rounded-full"></div>
+                        <span class="text-sm text-white">Available: 8</span>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-metallic-blue/20 border border-metallic-blue/30 text-metallic-blue py-2 rounded-lg text-sm font-medium hover:bg-metallic-blue/30 transition-colors">
+                Check In New
+            </button>
+        </div>
+
+        <!-- Today's Revenue Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card gold-glow">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Today's Revenue</h3>
+                    <div class="text-2xl font-bold text-accent-gold">$2,847</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-400">Bar Fees</span>
+                    <span class="text-white font-medium">$1,640</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-gray-400">VIP Dances</span>
+                    <span class="text-white font-medium">$1,207</span>
+                </div>
+                <div class="flex justify-between text-sm pt-2 border-t border-gray-700">
+                    <span class="text-green-400">vs Yesterday</span>
+                    <span class="text-green-400 font-medium">+12%</span>
+                </div>
+            </div>
+            
+            <div class="mt-4 w-full bg-gray-700 rounded-full h-2">
+                <div class="bg-accent-gold h-2 rounded-full" style="width: 78%"></div>
+            </div>
+            <div class="text-xs text-gray-400 mt-1">78% of weekly goal</div>
+        </div>
+
+        <!-- DJ Queue Card -->
+        <div class="md:col-span-2 lg:col-span-3 xl:col-span-2 glass-card rounded-2xl p-6 floating-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">DJ Queue</h3>
+                    <div class="text-sm text-gray-400">Drag to reorder</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-metallic-blue/10 border border-metallic-blue/30 rounded-lg p-4 border-l-4 border-l-metallic-blue">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-metallic-blue/20 rounded-full flex items-center justify-center">
+                                <span class="text-sm font-bold text-metallic-blue">1</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">Samantha Lee</div>
+                                <div class="text-sm text-gray-400">"Levitating" - Dua Lipa</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="text-xs text-green-400 bg-green-900/30 px-2 py-1 rounded">Ready</div>
+                            <button class="text-gray-400 hover:text-white">⋮⋮</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-l-gray-600">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <span class="text-sm font-bold text-gray-400">2</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">Christina Moore</div>
+                                <div class="text-sm text-gray-400">"Bad Guy" - Billie Eilish</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded">Waiting</div>
+                            <button class="text-gray-400 hover:text-white">⋮⋮</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-l-gray-600">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                <span class="text-sm font-bold text-gray-400">3</span>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">Diamond Rose</div>
+                                <div class="text-sm text-accent-gold">Song selection pending</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="text-xs text-accent-gold bg-accent-gold/20 px-2 py-1 rounded">Selecting</div>
+                            <button class="text-gray-400 hover:text-white">⋮⋮</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-accent-gold/20 border border-accent-gold/30 text-accent-gold py-2 rounded-lg text-sm font-medium hover:bg-accent-gold/30 transition-colors">
+                + Add Dancer to Queue
+            </button>
+        </div>
+
+        <!-- License Alerts Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card red-glow">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">License Alerts</h3>
+                    <div class="text-2xl font-bold text-deep-red">3</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-deep-red/10 border border-deep-red/30 rounded-lg p-3">
+                    <div class="flex items-start space-x-2">
+                        <div class="w-3 h-3 bg-deep-red rounded-full mt-1 status-indicator"></div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Ashley Stone</div>
+                            <div class="text-xs text-deep-red">Expires tomorrow</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-accent-gold/10 border border-accent-gold/30 rounded-lg p-3">
+                    <div class="flex items-start space-x-2">
+                        <div class="w-3 h-3 bg-accent-gold rounded-full mt-1"></div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Maya Johnson</div>
+                            <div class="text-xs text-accent-gold">Expires in 5 days</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-accent-gold/10 border border-accent-gold/30 rounded-lg p-3">
+                    <div class="flex items-start space-x-2">
+                        <div class="w-3 h-3 bg-accent-gold rounded-full mt-1"></div>
+                        <div>
+                            <div class="text-sm font-medium text-white">Sophia Chen</div>
+                            <div class="text-xs text-accent-gold">Expires in 8 days</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-deep-red/20 border border-deep-red/30 text-deep-red py-2 rounded-lg text-sm font-medium hover:bg-deep-red/30 transition-colors">
+                Manage Licenses
+            </button>
+        </div>
+
+        <!-- VIP Rooms Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">VIP Rooms</h3>
+                    <div class="text-sm text-gray-400">2/3 occupied</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-green-900/20 border border-green-600/30 rounded-lg p-3">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-sm font-medium text-white">Room 1</div>
+                            <div class="text-xs text-green-400">18:42 elapsed</div>
+                        </div>
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-green-900/20 border border-green-600/30 rounded-lg p-3">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-sm font-medium text-white">Room 2</div>
+                            <div class="text-xs text-green-400">12:15 elapsed</div>
+                        </div>
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800/50 border border-gray-600/30 rounded-lg p-3">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <div class="text-sm font-medium text-white">Room 3</div>
+                            <div class="text-xs text-gray-400">Available</div>
+                        </div>
+                        <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-green-600/20 border border-green-600/30 text-green-400 py-2 rounded-lg text-sm font-medium hover:bg-green-600/30 transition-colors">
+                Book Room
+            </button>
+        </div>
+
+        <!-- Music Player Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Music Player</h3>
+                    <div class="text-sm text-gray-400">Main Stage</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="bg-gray-800/50 rounded-lg p-4 mb-4">
+                <div class="text-center">
+                    <div class="text-sm text-gray-400 mb-1">Now Playing</div>
+                    <div class="text-sm font-medium text-white mb-2">Dangerous Woman</div>
+                    <div class="text-xs text-gray-400">Ariana Grande</div>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-center space-x-4">
+                <button class="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
+                    <span class="text-white">⏮</span>
+                </button>
+                <button class="w-12 h-12 bg-accent-gold hover:bg-orange-600 rounded-full flex items-center justify-center transition-colors">
+                    <span class="text-white">⏸</span>
+                </button>
+                <button class="w-10 h-10 bg-gray-700 hover:bg-gray-600 rounded-full flex items-center justify-center transition-colors">
+                    <span class="text-white">⏭</span>
+                </button>
+            </div>
+            
+            <div class="mt-4 w-full bg-gray-700 rounded-full h-1">
+                <div class="bg-accent-gold h-1 rounded-full transition-all duration-1000" style="width: 65%"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Quick Actions</h3>
+                    <div class="text-sm text-gray-400">Common tasks</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <button class="bg-metallic-blue/20 border border-metallic-blue/30 text-metallic-blue py-3 rounded-lg text-xs font-medium hover:bg-metallic-blue/30 transition-colors">
+                    Check In
+                </button>
+                <button class="bg-accent-gold/20 border border-accent-gold/30 text-accent-gold py-3 rounded-lg text-xs font-medium hover:bg-accent-gold/30 transition-colors">
+                    End Night
+                </button>
+                <button class="bg-deep-red/20 border border-deep-red/30 text-deep-red py-3 rounded-lg text-xs font-medium hover:bg-deep-red/30 transition-colors">
+                    Emergency
+                </button>
+                <button class="bg-gray-700 text-gray-300 py-3 rounded-lg text-xs font-medium hover:bg-gray-600 transition-colors">
+                    Reports
+                </button>
+            </div>
+        </div>
+
+        <!-- Recent Activity Card -->
+        <div class="md:col-span-2 glass-card rounded-2xl p-6 floating-card">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-white">Recent Activity</h3>
+                    <div class="text-sm text-gray-400">Last 30 minutes</div>
+                </div>
+                <div class="drag-handle w-6 h-6 rounded"></div>
+            </div>
+            
+            <div class="space-y-3 max-h-48 overflow-y-auto">
+                <div class="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span class="text-sm text-white">Jessica Rivera started performance</span>
+                    </div>
+                    <span class="text-xs text-gray-400">2 min</span>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-accent-gold rounded-full"></div>
+                        <span class="text-sm text-white">VIP Room 1 session started</span>
+                    </div>
+                    <span class="text-xs text-gray-400">5 min</span>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-deep-red rounded-full"></div>
+                        <span class="text-sm text-white">License alert: Ashley Stone</span>
+                    </div>
+                    <span class="text-xs text-gray-400">12 min</span>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-metallic-blue rounded-full"></div>
+                        <span class="text-sm text-white">Bar fee collected: $120</span>
+                    </div>
+                    <span class="text-xs text-gray-400">15 min</span>
+                </div>
+                
+                <div class="flex items-center justify-between bg-gray-800/30 rounded-lg p-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span class="text-sm text-white">Diamond Rose checked in</span>
+                    </div>
+                    <span class="text-xs text-gray-400">22 min</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Widget Card -->
+        <div class="glass-card rounded-2xl p-6 floating-card border-dashed border-2 border-gray-600 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-gray-700 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl text-gray-400">+</span>
+                </div>
+                <div class="text-sm font-medium text-gray-400">Add Widget</div>
+                <div class="text-xs text-gray-500 mt-1">Customize your dashboard</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

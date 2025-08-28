@@ -1,0 +1,396 @@
+// ClubOps SaaS - Complete Database Schema
+// Generated: August 26, 2025
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// AUTHENTICATION & USERS
+// ============================================================================
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  password    String
+  firstName   String
+  lastName    String
+  phone       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Multi-tenant relationships
+  clubRoles   UserClubRole[]
+  createdTransactions FinancialTransaction[] @relation("CreatedBy")
+  createdDancers      Dancer[] @relation("CreatedBy")
+  
+  @@map("users")
+}
+
+model Club {
+  id              String   @id @default(cuid())
+  name            String
+  address         String
+  city            String
+  state           String
+  zipCode         String
+  phone           String
+  email           String
+  licenseNumber   String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relationships
+  userRoles       UserClubRole[]
+  dancers         Dancer[]
+  stages          Stage[]
+  vipRooms        VipRoom[]
+  transactions    FinancialTransaction[]
+  djQueues        DjQueue[]
+  
+  @@map("clubs")
+}
+
+model UserClubRole {
+  id       String   @id @default(cuid())
+  userId   String
+  clubId   String
+  role     UserRole @default(STAFF)
+  isActive Boolean  @default(true)
+  
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club     Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, clubId])
+  @@map("user_club_roles")
+}
+
+enum UserRole {
+  OWNER
+  MANAGER  
+  DJ
+  SECURITY
+  STAFF
+}
+
+// ============================================================================
+// DANCER MANAGEMENT
+// ============================================================================
+
+model Dancer {
+  id              String    @id @default(cuid())
+  clubId          String
+  stageName       String
+  firstName       String?
+  lastName        String?
+  phone           String?
+  email           String?
+  dateOfBirth     DateTime?
+  isActive        Boolean   @default(true)
+  profileImage    String?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdById     String
+  
+  // Relationships
+  club            Club @relation(fields: [clubId], references: [id])
+  createdBy       User @relation("CreatedBy", fields: [createdById], references: [id])
+  licenses        DancerLicense[]
+  sessions        DancerSession[]
+  fees            DancerFee[]
+  queueEntries    QueueEntry[]
+  vipBookings     VipBooking[]
+  playlists       DancerPlaylist[]
+  
+  @@unique([clubId, stageName])
+  @@map("dancers")
+}
+
+model DancerLicense {
+  id              String     @id @default(cuid())
+  dancerId        String
+  licenseType     LicenseType
+  licenseNumber   String
+  issueDate       DateTime
+  expirationDate  DateTime
+  issuingAuthority String
+  isActive        Boolean    @default(true)
+  documentUrl     String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  dancer          Dancer @relation(fields: [dancerId], references: [id], onDelete: Cascade)
+  
+  @@map("dancer_licenses")
+}
+
+enum LicenseType {
+  ENTERTAINMENT
+  WORK_PERMIT
+  HEALTH_CERTIFICATE
+  ID_VERIFICATION
+}
+
+model DancerSession {
+  id          String    @id @default(cuid())
+  dancerId    String
+  clubId      String
+  checkInTime DateTime  @default(now())
+  checkOutTime DateTime?
+  barFeePaid  Boolean   @default(false)
+  barFeeAmount Decimal? @db.Decimal(10, 2)
+  notes       String?
+  
+  dancer      Dancer @relation(fields: [dancerId], references: [id])
+  
+  @@map("dancer_sessions")
+}
+
+model DancerFee {
+  id          String      @id @default(cuid())
+  dancerId    String
+  clubId      String
+  feeType     FeeType
+  amount      Decimal     @db.Decimal(10, 2)
+  isPaid      Boolean     @default(false)
+  dueDate     DateTime?
+  paidDate    DateTime?
+  notes       String?
+  createdAt   DateTime    @default(now())
+  
+  dancer      Dancer @relation(fields: [dancerId], references: [id])
+  
+  @@map("dancer_fees")
+}
+
+enum FeeType {
+  BAR_FEE
+  HOUSE_FEE
+  LATE_FEE
+  PENALTY
+}
+
+// ============================================================================
+// DJ QUEUE MANAGEMENT
+// ============================================================================
+
+model Stage {
+  id          String   @id @default(cuid())
+  clubId      String
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  maxCapacity Int?
+  createdAt   DateTime @default(now())
+  
+  club        Club @relation(fields: [clubId], references: [id])
+  djQueues    DjQueue[]
+  
+  @@unique([clubId, name])
+  @@map("stages")
+}
+
+model DjQueue {
+  id          String   @id @default(cuid())
+  clubId      String
+  stageId     String
+  name        String
+  isActive    Boolean  @default(true)
+  currentSong String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  club        Club @relation(fields: [clubId], references: [id])
+  stage       Stage @relation(fields: [stageId], references: [id])
+  entries     QueueEntry[]
+  
+  @@unique([clubId, stageId])
+  @@map("dj_queues")
+}
+
+model QueueEntry {
+  id          String     @id @default(cuid())
+  queueId     String
+  dancerId    String
+  position    Int
+  songTitle   String?
+  artist      String?
+  duration    Int?       // Duration in seconds
+  status      QueueStatus @default(WAITING)
+  addedAt     DateTime   @default(now())
+  startedAt   DateTime?
+  completedAt DateTime?
+  
+  queue       DjQueue @relation(fields: [queueId], references: [id], onDelete: Cascade)
+  dancer      Dancer @relation(fields: [dancerId], references: [id])
+  
+  @@unique([queueId, position])
+  @@map("queue_entries")
+}
+
+enum QueueStatus {
+  WAITING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model DancerPlaylist {
+  id          String   @id @default(cuid())
+  dancerId    String
+  name        String
+  songs       Json     // Array of song objects
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  dancer      Dancer @relation(fields: [dancerId], references: [id], onDelete: Cascade)
+  
+  @@map("dancer_playlists")
+}
+
+// ============================================================================
+// VIP ROOM MANAGEMENT
+// ============================================================================
+
+model VipRoom {
+  id          String   @id @default(cuid())
+  clubId      String
+  name        String
+  description String?
+  hourlyRate  Decimal  @db.Decimal(10, 2)
+  capacity    Int      @default(1)
+  amenities   Json?    // Array of amenity strings
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  
+  club        Club @relation(fields: [clubId], references: [id])
+  bookings    VipBooking[]
+  
+  @@unique([clubId, name])
+  @@map("vip_rooms")
+}
+
+model VipBooking {
+  id          String        @id @default(cuid())
+  roomId      String
+  dancerId    String?
+  customerName String?
+  startTime   DateTime
+  endTime     DateTime?
+  totalAmount Decimal?      @db.Decimal(10, 2)
+  status      BookingStatus @default(ACTIVE)
+  notes       String?
+  createdAt   DateTime      @default(now())
+  
+  room        VipRoom @relation(fields: [roomId], references: [id])
+  dancer      Dancer? @relation(fields: [dancerId], references: [id])
+  
+  @@map("vip_bookings")
+}
+
+enum BookingStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+// ============================================================================
+// FINANCIAL TRACKING
+// ============================================================================
+
+model FinancialTransaction {
+  id              String            @id @default(cuid())
+  clubId          String
+  transactionType TransactionType
+  category        String?
+  amount          Decimal           @db.Decimal(10, 2)
+  description     String
+  reference       String?           // Reference to related record (dancer ID, booking ID, etc.)
+  paymentMethod   PaymentMethod?
+  processedAt     DateTime          @default(now())
+  createdById     String
+  
+  club            Club @relation(fields: [clubId], references: [id])
+  createdBy       User @relation("CreatedBy", fields: [createdById], references: [id])
+  
+  @@map("financial_transactions")
+}
+
+enum TransactionType {
+  REVENUE
+  EXPENSE
+  REFUND
+  ADJUSTMENT
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  OTHER
+}
+
+model FinancialReport {
+  id          String     @id @default(cuid())
+  clubId      String
+  reportType  ReportType
+  title       String
+  parameters  Json       // Report parameters and filters
+  data        Json       // Generated report data
+  generatedAt DateTime   @default(now())
+  generatedBy String
+  
+  @@map("financial_reports")
+}
+
+enum ReportType {
+  DAILY_REVENUE
+  WEEKLY_SUMMARY
+  MONTHLY_SUMMARY
+  DANCER_EARNINGS
+  VIP_REVENUE
+  EXPENSE_REPORT
+}
+
+// ============================================================================
+// SYSTEM & AUDIT
+// ============================================================================
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  clubId      String?
+  userId      String?
+  action      String
+  entityType  String   // Table/model name
+  entityId    String?  // Record ID
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  id          String   @id @default(cuid())
+  clubId      String?  // Null for global settings
+  key         String
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+  
+  @@unique([clubId, key])
+  @@map("system_settings")
+}

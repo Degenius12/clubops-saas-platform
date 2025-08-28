@@ -1,0 +1,32 @@
+{
+  "name": "clubops-database",
+  "version": "1.0.0",
+  "description": "ClubOps SaaS Database Schema & Migrations",
+  "main": "index.js",
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "deploy": "prisma migrate deploy",
+    "seed": "tsx prisma/seed.ts",
+    "studio": "prisma studio",
+    "reset": "prisma migrate reset",
+    "push": "prisma db push"
+  },
+  "keywords": ["clubops", "database", "prisma", "saas"],
+  "author": "ClubOps Team",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "prisma": "^5.5.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "@types/bcryptjs": "^2.4.4",
+    "tsx": "^4.0.0",
+    "typescript": "^5.2.2"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubOps - Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#1a1a1a',
+                        'dark-surface': '#242424',
+                        'metallic-blue': '#2563eb',
+                        'accent-gold': '#d97706',
+                        'deep-red': '#dc2626'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-border {
+            background: linear-gradient(45deg, #2563eb, #d97706, #dc2626);
+            padding: 2px;
+            border-radius: 12px;
+        }
+        .gradient-border-content {
+            background: #242424;
+            border-radius: 10px;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-sans min-h-screen">
+    <!-- Header -->
+    <header class="bg-dark-surface border-b border-gray-700 px-8 py-4">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="text-2xl font-bold bg-gradient-to-r from-metallic-blue via-accent-gold to-deep-red bg-clip-text text-transparent">
+                    ClubOps
+                </div>
+                <div class="text-gray-400 text-sm">Professional Club Management</div>
+            </div>
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2 px-4 py-2 bg-deep-red/20 rounded-lg border border-deep-red/30">
+                    <div class="w-3 h-3 bg-deep-red rounded-full animate-pulse"></div>
+                    <span class="text-deep-red text-sm font-medium">3 License Alerts</span>
+                </div>
+                <div class="text-sm text-gray-300">Club Manager</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Grid -->
+    <main class="p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Dancer Check-in Panel -->
+            <div class="lg:col-span-1">
+                <div class="gradient-border">
+                    <div class="gradient-border-content p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-accent-gold">Dancer Check-in</h3>
+                        <div class="space-y-4">
+                            <!-- Active Dancers -->
+                            <div class="bg-gray-800/50 rounded-lg p-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm text-gray-400">Currently Active</span>
+                                    <span class="text-2xl font-bold text-green-400">12</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- License Status -->
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between bg-deep-red/10 border border-deep-red/30 rounded-lg p-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-deep-red/20 rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-deep-red">AS</span>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-white">Ashley Stone</div>
+                                            <div class="text-xs text-deep-red">License expires tomorrow</div>
+                                        </div>
+                                    </div>
+                                    <div class="w-3 h-3 bg-deep-red rounded-full"></div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between bg-accent-gold/10 border border-accent-gold/30 rounded-lg p-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-accent-gold/20 rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-accent-gold">MJ</span>
+                                        </div>
+                                        <div>
+                                            <div class="text-sm font-medium text-white">Maya Johnson</div>
+                                            <div class="text-xs text-accent-gold">License expires in 5 days</div>
+                                        </div>
+                                    </div>
+                                    <div class="w-3 h-3 bg-accent-gold rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <button class="w-full bg-metallic-blue hover:bg-blue-600 transition-colors duration-200 text-white py-3 rounded-lg font-medium">
+                                Check In Dancer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DJ Queue Management -->
+            <div class="lg:col-span-2">
+                <div class="gradient-border">
+                    <div class="gradient-border-content p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-semibold text-accent-gold">DJ Queue - Main Stage</h3>
+                            <div class="flex space-x-2">
+                                <button class="px-4 py-2 bg-metallic-blue/20 text-metallic-blue border border-metallic-blue/30 rounded-lg text-sm">Main Stage</button>
+                                <button class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm">VIP Stage</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Currently Performing -->
+                        <div class="bg-gradient-to-r from-accent-gold/20 to-deep-red/20 border border-accent-gold/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div class="text-sm text-gray-400 mb-1">Now Performing</div>
+                                    <div class="text-xl font-bold text-white">Jessica Rivera</div>
+                                    <div class="text-sm text-accent-gold">"Dangerous Woman" - Ariana Grande</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-2xl font-bold text-white">2:34</div>
+                                    <div class="text-sm text-gray-400">Remaining</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Queue List -->
+                        <div class="space-y-3">
+                            <div class="text-sm font-medium text-gray-400 mb-3">Up Next</div>
+                            
+                            <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-metallic-blue">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-8 h-8 bg-metallic-blue/20 rounded-full flex items-center justify-center">
+                                            <span class="text-sm font-bold text-metallic-blue">1</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white">Samantha Lee</div>
+                                            <div class="text-sm text-gray-400">"Levitating" - Dua Lipa</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-white">⋮</button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-gray-600">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                            <span class="text-sm font-bold text-gray-400">2</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white">Christina Moore</div>
+                                            <div class="text-sm text-gray-400">"Bad Guy" - Billie Eilish</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-white">⋮</button>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800/50 rounded-lg p-4 border-l-4 border-gray-600">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                                            <span class="text-sm font-bold text-gray-400">3</span>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white">Diamond Rose</div>
+                                            <div class="text-sm text-gray-400">"Watermelon Sugar" - Harry Styles</div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-white">⋮</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="w-full mt-4 bg-accent-gold hover:bg-yellow-600 transition-colors duration-200 text-black py-3 rounded-lg font-medium">
+                            Add to Queue
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIP & Revenue Panel -->
+            <div class="lg:col-span-1">
+                <div class="gradient-border">
+                    <div class="gradient-border-content p-6">
+                        <h3 class="text-lg font-semibold mb-4 text-accent-gold">VIP Status & Revenue</h3>
+                        
+                        <!-- VIP Rooms -->
+                        <div class="space-y-4 mb-6">
+                            <div class="bg-green-900/30 border border-green-600/30 rounded-lg p-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-sm font-medium text-white">VIP Room 1</div>
+                                        <div class="text-xs text-green-400">Occupied - 18:42</div>
+                                    </div>
+                                    <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-green-900/30 border border-green-600/30 rounded-lg p-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-sm font-medium text-white">VIP Room 2</div>
+                                        <div class="text-xs text-green-400">Occupied - 12:15</div>
+                                    </div>
+                                    <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-gray-800/50 border border-gray-600/30 rounded-lg p-3">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-sm font-medium text-white">VIP Room 3</div>
+                                        <div class="text-xs text-gray-400">Available</div>
+                                    </div>
+                                    <div class="w-3 h-3 bg-gray-400 rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Revenue Today -->
+                        <div class="space-y-4">
+                            <div class="bg-gray-800/50 rounded-lg p-4">
+                                <div class="text-center">
+                                    <div class="text-sm text-gray-400 mb-1">Today's Revenue</div>
+                                    <div class="text-2xl font-bold text-accent-gold">$2,847</div>
+                                    <div class="text-xs text-green-400 mt-1">↗ +12% vs yesterday</div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-gray-800/50 rounded-lg p-3 text-center">
+                                    <div class="text-sm text-gray-400">Bar Fees</div>
+                                    <div class="text-lg font-bold text-white">$1,640</div>
+                                </div>
+                                <div class="bg-gray-800/50 rounded-lg p-3 text-center">
+                                    <div class="text-sm text-gray-400">VIP Dances</div>
+                                    <div class="text-lg font-bold text-white">$1,207</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            <!-- Quick Actions -->
+            <div class="gradient-border">
+                <div class="gradient-border-content p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-accent-gold">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="bg-metallic-blue/20 border border-metallic-blue/30 text-metallic-blue py-3 rounded-lg text-sm font-medium hover:bg-metallic-blue/30 transition-colors">
+                            New Application
+                        </button>
+                        <button class="bg-accent-gold/20 border border-accent-gold/30 text-accent-gold py-3 rounded-lg text-sm font-medium hover:bg-accent-gold/30 transition-colors">
+                            End of Night
+                        </button>
+                        <button class="bg-deep-red/20 border border-deep-red/30 text-deep-red py-3 rounded-lg text-sm font-medium hover:bg-deep-red/30 transition-colors">
+                            Emergency Alert
+                        </button>
+                        <button class="bg-gray-700 text-gray-300 py-3 rounded-lg text-sm font-medium hover:bg-gray-600 transition-colors">
+                            Reports
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="lg:col-span-2 gradient-border">
+                <div class="gradient-border-content p-6">
+                    <h3 class="text-lg font-semibold mb-4 text-accent-gold">Recent Activity</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center justify-between py-2 border-b border-gray-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-white">Jessica Rivera checked in</span>
+                            </div>
+                            <span class="text-gray-400">2 min ago</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-accent-gold rounded-full"></div>
+                                <span class="text-white">VIP Room 1 session started</span>
+                            </div>
+                            <span class="text-gray-400">5 min ago</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2 border-b border-gray-700/50">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-deep-red rounded-full"></div>
+                                <span class="text-white">License alert: Ashley Stone expires tomorrow</span>
+                            </div>
+                            <span class="text-gray-400">12 min ago</span>
+                        </div>
+                        <div class="flex items-center justify-between py-2">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-2 h-2 bg-metallic-blue rounded-full"></div>
+                                <span class="text-white">Bar fee collected: $120</span>
+                            </div>
+                            <span class="text-gray-400">15 min ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
