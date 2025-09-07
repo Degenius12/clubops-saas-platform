@@ -1,5 +1,5 @@
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://your-backend-url.herokuapp.com' 
+  ? 'https://clubops-backend-vercel-kmhv.vercel.app' 
   : 'http://localhost:3001'
 
 export interface User {
@@ -68,14 +68,14 @@ export class ApiClient {
 
   // Auth methods
   async login(email: string, password: string): Promise<LoginResponse> {
-    return this.request('/auth/login', {
+    return this.request('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password })
     })
   }
 
   async getMe(): Promise<{ user: User }> {
-    return this.request('/auth/me')
+    return this.request('/api/auth/me')
   }
 
   // Dancer methods
