@@ -1,8 +1,9 @@
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
   ? 'https://clubops-backend-vercel-kmhv.vercel.app' 
-  : 'http://localhost:3001'
+  : process.env.VITE_API_BASE_URL || 'http://localhost:3001'
 
 console.log('API Base URL:', API_BASE_URL)
+console.log('Environment:', process.env.NODE_ENV)
 
 export interface User {
   id: string
@@ -27,7 +28,10 @@ export class ApiClient {
   constructor() {
     // Load token from localStorage on initialization
     this.token = localStorage.getItem('auth_token')
-    console.log('ApiClient initialized, token found:', !!this.token)
+    console.log('ApiClient initialized')
+    console.log('- API Base URL:', API_BASE_URL)
+    console.log('- Environment:', process.env.NODE_ENV)
+    console.log('- Token found:', !!this.token)
   }
 
   setToken(token: string) {
@@ -50,10 +54,19 @@ export class ApiClient {
     const url = `${API_BASE_URL}${endpoint}`
     const token = this.getToken()
     
-    console.log(`Making request to: ${url}`)
-    console.log('Request options:', { ...options, headers: { ...options.headers } })
+    console.log(`🌐 Making request to: ${url}`)
+    console.log('🔧 Request options:', { 
+      method: options.method || 'GET',
+      hasAuth: !!token,
+      headers: Object.keys(options.headers || {})
+    })
     
     try {
+      // Test basic connectivity first
+      if (!API_BASE_URL.startsWith('http')) {
+        throw new Error(`Invalid API base URL: ${API_BASE_URL}`)
+      }
+
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -63,12 +76,12 @@ export class ApiClient {
         }
       })
 
-      console.log(`Response status: ${response.status}`)
-      console.log(`Response ok: ${response.ok}`)
+      console.log(`📡 Response status: ${response.status} ${response.statusText}`)
+      console.log(`✅ Response ok: ${response.ok}`)
 
       if (!response.ok) {
         const errorText = await response.text()
-        console.error(`API Error Response: ${errorText}`)
+        console.error(`❌ API Error Response: ${errorText}`)
         
         if (response.status === 401) {
           this.clearToken()
@@ -88,30 +101,41 @@ export class ApiClient {
       }
 
       const responseText = await response.text()
-      console.log('Raw response:', responseText)
+      console.log('📄 Raw response length:', responseText.length)
       
       if (!responseText) {
         throw new Error('Empty response from server')
       }
       
       try {
-        return JSON.parse(responseText)
+        const jsonResponse = JSON.parse(responseText)
+        console.log('✅ JSON parsed successfully')
+        return jsonResponse
       } catch (parseError) {
-        console.error('Failed to parse JSON response:', parseError)
+        console.error('❌ Failed to parse JSON response:', parseError)
+        console.error('Raw response:', responseText.substring(0, 200) + '...')
         throw new Error('Invalid JSON response from server')
       }
       
     } catch (error) {
-      console.error('Request failed:', error)
+      console.error('💥 Request failed:', error)
       
       // Network or fetch errors
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Network error: Cannot connect to server. Please check your internet connection.')
-      }
-      
-      // CORS errors
-      if (error instanceof TypeError && error.message.includes('CORS')) {
-        throw new Error('CORS error: Server configuration issue. Please contact support.')
+      if (error instanceof TypeError) {
+        if (error.message.includes('fetch')) {
+          console.error('🌐 Network Error Details:', {
+            url,
+            apiBaseUrl: API_BASE_URL,
+            endpoint,
+            userAgent: navigator.userAgent,
+            online: navigator.onLine
+          })
+          throw new Error('Network error: Cannot connect to server. Please check your internet connection and verify the backend URL is correct.')
+        }
+        
+        if (error.message.includes('CORS')) {
+          throw new Error('CORS error: Server configuration issue. Please contact support.')
+        }
       }
       
       // Re-throw other errors as-is
@@ -121,7 +145,7 @@ export class ApiClient {
 
   // Auth methods
   async login(email: string, password: string): Promise<LoginResponse> {
-    console.log('Attempting login with email:', email)
+    console.log('🔐 Attempting login with email:', email)
     
     try {
       const response = await this.request('/auth/login', {
@@ -129,7 +153,11 @@ export class ApiClient {
         body: JSON.stringify({ email, password })
       })
       
-      console.log('Login response received:', response)
+      console.log('✅ Login response received:', {
+        hasToken: !!response?.token,
+        hasUser: !!response?.user,
+        userEmail: response?.user?.email
+      })
       
       // Validate response structure
       if (!response) {
@@ -155,18 +183,20 @@ export class ApiClient {
       return response as LoginResponse
       
     } catch (error) {
-      console.error('Login request failed:', error)
+      console.error('❌ Login request failed:', error)
       throw error
     }
   }
 
   async getMe(): Promise<{ user: User }> {
-    console.log('Fetching user profile')
+    console.log('👤 Fetching user profile')
     
     try {
       const response = await this.request('/auth/me')
       
-      console.log('/auth/me response:', response)
+      console.log('✅ /auth/me response received:', {
+        hasUser: !!response?.user
+      })
       
       // Validate response structure
       if (!response || typeof response !== 'object') {
@@ -184,12 +214,41 @@ export class ApiClient {
       return response as { user: User }
       
     } catch (error) {
-      console.error('Get user profile failed:', error)
+      console.error('❌ Get user profile failed:', error)
       throw error
     }
   }
 
-  // Dancer methods
+  // Health check with detailed diagnostics
+  async healthCheck() {
+    console.log('🏥 Performing health check')
+    try {
+      const startTime = Date.now()
+      const response = await this.request('/health')
+      const endTime = Date.now()
+      
+      console.log('✅ Health check successful:', {
+        responseTime: `${endTime - startTime}ms`,
+        status: response.status,
+        version: response.version,
+        environment: response.environment
+      })
+      
+      return response
+    } catch (error) {
+      console.error('❌ Health check failed:', error)
+      console.error('🔍 Health check diagnostics:', {
+        apiBaseUrl: API_BASE_URL,
+        endpoint: '/health',
+        fullUrl: `${API_BASE_URL}/health`,
+        online: navigator.onLine,
+        userAgent: navigator.userAgent.substring(0, 50)
+      })
+      throw error
+    }
+  }
+
+  // Other methods remain the same...
   async getDancers(clubId: string) {
     return this.request('/api/dancers', {
       headers: { 'club-id': clubId }
@@ -210,7 +269,6 @@ export class ApiClient {
     })
   }
 
-  // DJ Queue methods
   async getQueue(stageId: string, clubId: string) {
     return this.request(`/api/queue/${stageId}`, {
       headers: { 'club-id': clubId }
@@ -233,7 +291,6 @@ export class ApiClient {
     })
   }
 
-  // VIP Room methods
   async getVipRooms(clubId: string) {
     return this.request('/api/vip-rooms', {
       headers: { 'club-id': clubId }
@@ -255,7 +312,6 @@ export class ApiClient {
     })
   }
 
-  // Financial methods
   async getFinancialDashboard(clubId: string, period: string = 'today') {
     return this.request(`/api/financial/dashboard?period=${period}`, {
       headers: { 'club-id': clubId }
@@ -268,19 +324,6 @@ export class ApiClient {
       headers: { 'club-id': clubId },
       body: JSON.stringify(feeData)
     })
-  }
-
-  // Health check
-  async healthCheck() {
-    console.log('Performing health check')
-    try {
-      const response = await this.request('/health')
-      console.log('Health check response:', response)
-      return response
-    } catch (error) {
-      console.error('Health check failed:', error)
-      throw error
-    }
   }
 }
 
