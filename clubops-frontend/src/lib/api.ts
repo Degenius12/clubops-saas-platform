@@ -2,6 +2,8 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? 'https://clubops-backend-vercel-kmhv.vercel.app' 
   : 'http://localhost:3001'
 
+console.log('API Base URL:', API_BASE_URL)
+
 export interface User {
   id: string
   email: string
@@ -25,11 +27,13 @@ export class ApiClient {
   constructor() {
     // Load token from localStorage on initialization
     this.token = localStorage.getItem('auth_token')
+    console.log('ApiClient initialized, token found:', !!this.token)
   }
 
   setToken(token: string) {
     this.token = token
     localStorage.setItem('auth_token', token)
+    console.log('Token set successfully')
   }
 
   getToken() {
@@ -39,43 +43,150 @@ export class ApiClient {
   clearToken() {
     this.token = null
     localStorage.removeItem('auth_token')
+    console.log('Token cleared')
   }
 
   async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`
     const token = this.getToken()
     
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers
-      }
-    })
+    console.log(`Making request to: ${url}`)
+    console.log('Request options:', { ...options, headers: { ...options.headers } })
+    
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token && { Authorization: `Bearer ${token}` }),
+          ...options.headers
+        }
+      })
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        this.clearToken()
-        window.location.href = '/login'
-        return
+      console.log(`Response status: ${response.status}`)
+      console.log(`Response ok: ${response.ok}`)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error(`API Error Response: ${errorText}`)
+        
+        if (response.status === 401) {
+          this.clearToken()
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login'
+          }
+          throw new Error('Authentication required. Please log in again.')
+        }
+        
+        // Try to parse error response
+        try {
+          const errorData = JSON.parse(errorText)
+          throw new Error(errorData.error || errorData.message || `API Error: ${response.statusText}`)
+        } catch (parseError) {
+          throw new Error(`API Error: ${response.status} ${response.statusText}`)
+        }
       }
-      throw new Error(`API Error: ${response.statusText}`)
+
+      const responseText = await response.text()
+      console.log('Raw response:', responseText)
+      
+      if (!responseText) {
+        throw new Error('Empty response from server')
+      }
+      
+      try {
+        return JSON.parse(responseText)
+      } catch (parseError) {
+        console.error('Failed to parse JSON response:', parseError)
+        throw new Error('Invalid JSON response from server')
+      }
+      
+    } catch (error) {
+      console.error('Request failed:', error)
+      
+      // Network or fetch errors
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Cannot connect to server. Please check your internet connection.')
+      }
+      
+      // CORS errors
+      if (error instanceof TypeError && error.message.includes('CORS')) {
+        throw new Error('CORS error: Server configuration issue. Please contact support.')
+      }
+      
+      // Re-throw other errors as-is
+      throw error
     }
-
-    return response.json()
   }
 
   // Auth methods
   async login(email: string, password: string): Promise<LoginResponse> {
-    return this.request('/api/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password })
-    })
+    console.log('Attempting login with email:', email)
+    
+    try {
+      const response = await this.request('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password })
+      })
+      
+      console.log('Login response received:', response)
+      
+      // Validate response structure
+      if (!response) {
+        throw new Error('No response received from login endpoint')
+      }
+      
+      if (typeof response !== 'object') {
+        throw new Error('Invalid response format from login endpoint')
+      }
+      
+      if (!response.token || typeof response.token !== 'string') {
+        throw new Error('Invalid or missing authentication token in response')
+      }
+      
+      if (!response.user || typeof response.user !== 'object') {
+        throw new Error('Invalid or missing user data in response')
+      }
+      
+      if (!response.user.clubs || !Array.isArray(response.user.clubs)) {
+        throw new Error('Invalid or missing clubs data in user response')
+      }
+      
+      return response as LoginResponse
+      
+    } catch (error) {
+      console.error('Login request failed:', error)
+      throw error
+    }
   }
 
   async getMe(): Promise<{ user: User }> {
-    return this.request('/api/auth/me')
+    console.log('Fetching user profile')
+    
+    try {
+      const response = await this.request('/auth/me')
+      
+      console.log('/auth/me response:', response)
+      
+      // Validate response structure
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response from user profile endpoint')
+      }
+      
+      if (!response.user || typeof response.user !== 'object') {
+        throw new Error('Invalid user data in profile response')
+      }
+      
+      if (!response.user.clubs || !Array.isArray(response.user.clubs)) {
+        throw new Error('Invalid clubs data in user profile')
+      }
+      
+      return response as { user: User }
+      
+    } catch (error) {
+      console.error('Get user profile failed:', error)
+      throw error
+    }
   }
 
   // Dancer methods
@@ -161,7 +272,15 @@ export class ApiClient {
 
   // Health check
   async healthCheck() {
-    return this.request('/health')
+    console.log('Performing health check')
+    try {
+      const response = await this.request('/health')
+      console.log('Health check response:', response)
+      return response
+    } catch (error) {
+      console.error('Health check failed:', error)
+      throw error
+    }
   }
 }
 
